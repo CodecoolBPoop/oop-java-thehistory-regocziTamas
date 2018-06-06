@@ -70,13 +70,7 @@ public class TheHistoryArray implements TheHistory {
                     }
                 }
                 if(matchFound){
-                    newArrayLength = wordsArray.length + diff;
-                    String[] temp = new String[newArrayLength];
-                    System.arraycopy(wordsArray,0,temp,0,i+1);
-                    System.arraycopy(toWords,0,temp,i,lenTo);
-                    System.arraycopy(wordsArray,i+lenFrom,temp,i+lenTo,temp.length-(i+lenTo));
-                    wordsArray = temp;
-                    i+=diff;
+                    
 
                 }
                 matchFound = true;
