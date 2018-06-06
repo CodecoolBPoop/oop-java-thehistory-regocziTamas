@@ -1,6 +1,7 @@
 package com.codecool.thehistory;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class TheHistoryArray implements TheHistory {
 
@@ -11,34 +12,85 @@ public class TheHistoryArray implements TheHistory {
 
     @Override
     public void add(String text) {
-        //TODO: check the TheHistory interface for more information
+        wordsArray = text.split("\\s+");
+        //System.out.println(Arrays.toString(wordsArray));
     }
 
     @Override
     public void removeWord(String wordToBeRemoved) {
-        //TODO: check the TheHistory interface for more information
+        String[] cleanedText = new String[wordsArray.length];
+        int count = 0;
+
+        for(String word: wordsArray){
+            if(!Objects.equals(word, wordToBeRemoved)){
+                cleanedText[count] = word;
+                count++;
+            }
+        }
+        this.wordsArray = Arrays.copyOfRange(cleanedText,0,count);
     }
 
     @Override
     public int size() {
-        //TODO: check the TheHistory interface for more information
-        return 0;
+        return wordsArray.length;
     }
 
     @Override
     public void clear() {
-        //TODO: check the TheHistory interface for more information
+        wordsArray = null;
     }
 
     @Override
     public void replaceOneWord(String from, String to) {
-        //TODO: check the TheHistory interface for more information
+        int count = 0;
+        for(String word: wordsArray){
+            if(Objects.equals(word,from)){
+                wordsArray[count] = to;
+            }
+            count++;
+        }
     }
 
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
-        //TODO: check the TheHistory interface for more information
+
+        //System.out.println(Arrays.toString(toWords));
+        int lenFrom = fromWords.length;
+        int lenTo = toWords.length;
+        boolean matchFound = true;
+        int newArrayLength = 0;
+        int diff = -1*lenFrom + lenTo;
+
+        for(int i = 0; i < wordsArray.length-lenFrom+1;i++){
+            if(Objects.equals(wordsArray[i], fromWords[0])){
+                for(int k = 1; k < lenFrom;k++){
+                    if(!Objects.equals(wordsArray[i+k], fromWords[k])){
+                        matchFound = false;
+                        break;
+                    }
+                }
+                if(matchFound){
+                    newArrayLength = wordsArray.length + diff;
+                    String[] temp = new String[newArrayLength];
+                    System.arraycopy(wordsArray,0,temp,0,i+1);
+                    System.arraycopy(toWords,0,temp,i,lenTo);
+                    System.arraycopy(wordsArray,i+lenFrom,temp,i+lenTo,temp.length-(i+lenTo));
+                    wordsArray = temp;
+                    i+=diff;
+
+                }
+                matchFound = true;
+            }
+        }
+
+
+
+
+
     }
+
+
+
 
     @Override
     public String toString() {
