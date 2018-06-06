@@ -58,14 +58,19 @@ public class TheHistoryArray implements TheHistory {
         int lenFrom = fromWords.length;
         int lenTo = toWords.length;
         boolean matchFound = true;
-        int newArrayLength = wordsArray.length;
         int diff = -1*lenFrom + lenTo;
-        String matches = "";
-        int previousStart = 0;
+        String[] newArray = new String[wordsArray.length+100];
+        int currentPosition = 0;
 
 
-        for(int i = 0; i < wordsArray.length-lenFrom+1;i++){
-            if(Objects.equals(wordsArray[i], fromWords[0])){
+
+        for(int i = 0; i < wordsArray.length;i++){
+            if(currentPosition+lenTo > newArray.length){
+                String[] temp = new String[newArray.length+100];
+                System.arraycopy(newArray,0,temp,0,currentPosition);
+                newArray = temp;
+            }
+            if(Objects.equals(wordsArray[i], fromWords[0])&& i+lenFrom-1 < wordsArray.length){
                 for(int k = 1; k < lenFrom;k++){
                     if(!Objects.equals(wordsArray[i+k], fromWords[k])){
                         matchFound = false;
@@ -73,47 +78,30 @@ public class TheHistoryArray implements TheHistory {
                     }
                 }
                 if(matchFound){
-                    newArrayLength+=diff;
-                    matches += previousStart + ":" + i + ",";
-                    previousStart = i+lenFrom;
-                    i+=lenFrom-1;
+                    for(int j = 0; j < lenTo;j++){
+                        newArray[currentPosition+j] = toWords[j];
+                    }
+                    i+=(lenFrom-1);
+                    currentPosition+=lenTo;
 
+                }else{
+                    newArray[currentPosition] = wordsArray[i];
+                    currentPosition++;
                 }
                 matchFound = true;
+            }else{
+                newArray[currentPosition] = wordsArray[i];
+                currentPosition++;
             }
         }
+
+        //System.out.println(Arrays.toString(newArray) + " last pointer: " + currentPosition);
+        String[] finalTemp = Arrays.copyOfRange(newArray,0,currentPosition);
+
+        wordsArray = finalTemp;
         //System.out.println("matches: " + matches + " new length: " + newArrayLength + " last: " + previousStart);
 
-        String[] matchesArray = matches.split(",");
-        String[] newArray = new String[newArrayLength];
-        int currentPosition = 0;
 
-
-        if(!Objects.equals(matches,"")) {
-            for (int i = 0; i < matchesArray.length; i++) {
-                String[] slice = matchesArray[i].split(":");
-                int start = Integer.valueOf(slice[0]);
-                int end = Integer.valueOf(slice[1]);
-                int length = end - start;
-
-                //System.out.println("start: " + start + " end: " + end + " length: " + length);
-                if (length > 0) {
-                    System.arraycopy(wordsArray, start, newArray, currentPosition, length);
-                }
-                currentPosition += length;
-                System.arraycopy(toWords, 0, newArray, currentPosition, lenTo);
-                currentPosition += lenTo;
-
-            }
-        }
-
-        if(previousStart != wordsArray.length){
-            int length = wordsArray.length-previousStart;
-            System.arraycopy(wordsArray,previousStart,newArray,currentPosition,length);
-        }
-
-        //System.out.println(Arrays.toString(newArray));
-        wordsArray=newArray;
 
 
 
