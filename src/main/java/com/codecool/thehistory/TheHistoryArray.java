@@ -58,8 +58,11 @@ public class TheHistoryArray implements TheHistory {
         int lenFrom = fromWords.length;
         int lenTo = toWords.length;
         boolean matchFound = true;
-        int newArrayLength = 0;
+        int newArrayLength = wordsArray.length;
         int diff = -1*lenFrom + lenTo;
+        String matches = "";
+        int previousStart = 0;
+
 
         for(int i = 0; i < wordsArray.length-lenFrom+1;i++){
             if(Objects.equals(wordsArray[i], fromWords[0])){
@@ -70,12 +73,50 @@ public class TheHistoryArray implements TheHistory {
                     }
                 }
                 if(matchFound){
-                    
+                    newArrayLength+=diff;
+                    matches += previousStart + ":" + i + ",";
+                    previousStart = i+lenFrom;
+                    i+=lenFrom-1;
 
                 }
                 matchFound = true;
             }
         }
+        //System.out.println("matches: " + matches + " new length: " + newArrayLength + " last: " + previousStart);
+
+        String[] matchesArray = matches.split(",");
+        String[] newArray = new String[newArrayLength];
+        int currentPosition = 0;
+
+
+        if(!Objects.equals(matches,"")) {
+            for (int i = 0; i < matchesArray.length; i++) {
+                String[] slice = matchesArray[i].split(":");
+                int start = Integer.valueOf(slice[0]);
+                int end = Integer.valueOf(slice[1]);
+                int length = end - start;
+
+                //System.out.println("start: " + start + " end: " + end + " length: " + length);
+                if (length > 0) {
+                    System.arraycopy(wordsArray, start, newArray, currentPosition, length);
+                }
+                currentPosition += length;
+                System.arraycopy(toWords, 0, newArray, currentPosition, lenTo);
+                currentPosition += lenTo;
+
+            }
+        }
+
+        if(previousStart != wordsArray.length){
+            int length = wordsArray.length-previousStart;
+            System.arraycopy(wordsArray,previousStart,newArray,currentPosition,length);
+        }
+
+        //System.out.println(Arrays.toString(newArray));
+        wordsArray=newArray;
+
+
+
 
 
 
