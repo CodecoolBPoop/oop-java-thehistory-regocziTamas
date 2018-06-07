@@ -54,15 +54,12 @@ public class TheHistoryArray implements TheHistory {
     @Override
     public void replaceMoreWords(String[] fromWords, String[] toWords) {
 
-        //System.out.println(Arrays.toString(toWords));
         int lenFrom = fromWords.length;
         int lenTo = toWords.length;
         boolean matchFound = true;
-        int diff = -1*lenFrom + lenTo;
+
         String[] newArray = new String[wordsArray.length+100];
         int currentPosition = 0;
-
-
 
         for(int i = 0; i < wordsArray.length;i++){
             if(currentPosition+lenTo > newArray.length){
@@ -95,11 +92,8 @@ public class TheHistoryArray implements TheHistory {
             }
         }
 
-        //System.out.println(Arrays.toString(newArray) + " last pointer: " + currentPosition);
-        String[] finalTemp = Arrays.copyOfRange(newArray,0,currentPosition);
+        wordsArray = Arrays.copyOfRange(newArray,0,currentPosition);
 
-        wordsArray = finalTemp;
-        //System.out.println("matches: " + matches + " new length: " + newArrayLength + " last: " + previousStart);
 
 
 
